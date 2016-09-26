@@ -37,4 +37,6 @@ class PGM_PPM{
 		T** matrix(){ return _matrix;};
 		byte** rgb8tobmatrix(rgb8** m);
 };
+
+#include "PGM_PPM.C"
 #endif

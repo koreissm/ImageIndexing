@@ -13,4 +13,6 @@ public:
 	Mask(int (* mask)[3]){_mask = mask;};
 	PGM_PPM<byte> apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch);
 };
+
+#include "Mask.C"
 #endif

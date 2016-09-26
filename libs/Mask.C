@@ -1,4 +1,3 @@
-#include "Mask.h"
 
 PGM_PPM<byte> Mask::apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch){
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque

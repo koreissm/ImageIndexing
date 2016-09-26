@@ -1,4 +1,3 @@
-#include "PGM_PPM.h"
 
 template <typename T>
 char* PGM_PPM<T>::_readitem(ifstream& file, char* buffer){
@@ -81,13 +80,6 @@ void PGM_PPM<T>::loadImage(char* filename){
   }
   
   free(buffer);
-
-  /*for(i=0; i<height; i++){
-    for(int j=0; j<width; j++){
-      cout << static_cast<unsigned>(m[i][j]) << ' ';
-    }
-    cout << endl;
-  }*/
 
   _matrix = m;
 
@@ -174,6 +166,3 @@ byte** PGM_PPM<T>::rgb8tobmatrix(rgb8** matrix){
 
   return m;     
 }
-
-template class PGM_PPM<byte**>;
-template class PGM_PPM<rgb8**>;
