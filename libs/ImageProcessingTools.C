@@ -53,15 +53,8 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
 
 long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
 	long* hist = new long[256];
-	//ofstream file;
 
 	char* buffer = new char[80];
-
-	//sprintf(buffer, "hist_%s", filename);
-
-	//file.open(buffer);
-  	//if (!file.is_open())
-    //	cerr << "ouverture du fichier impossible" << endl;
 
 	for(int i=0; i<256; i++)
 		hist[i]=0;
@@ -71,13 +64,7 @@ long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
 			hist[matrix[i][j]]++;
 		}
 	}
-
-	//for(int i=0; i<255; i++){
-	//	sprintf(buffer,"%d %ld\n", i, hist[i]);
-	//	file.write(buffer, strlen(buffer));
-	//}
-
-	//file.close();
+	
 	return hist;
 }
 

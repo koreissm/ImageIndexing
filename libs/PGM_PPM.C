@@ -40,7 +40,7 @@ void PGM_PPM<T>::loadImage(char* filename){
   long height, width, grey;
   T **m;
 
-  //Lire le fichier
+  // Lire le fichier
   ifstream file;
 
   char *buffer;
@@ -165,4 +165,70 @@ byte** PGM_PPM<T>::rgb8tobmatrix(rgb8** matrix){
       m[i][j] = (matrix[i][j].r + matrix[i][j].g + matrix[i][j].b)/3;
 
   return m;     
+}
+
+template <typename T>
+void PGM_PPM<T>::loadJpeg(char* filename){
+  std::ostringstream jpeg_in_memory;
+  jpeg::Decompress jpg_to_bytes(jpeg_in_memory);  
+  int width,height,depth,size;  
+  unsigned char* img_buffer;  
+  std::ifstream foo;  
+  char c;
+
+  foo.open(filename);
+  if(!foo){
+    std::cerr << "Cannot read \"" << filename << "\" file. Aborting." << std::endl;
+  }
+
+  jpg_to_bytes.setInputStream(foo); 
+
+
+  img_buffer=NULL;
+
+  foo.get(c);
+
+  while(!foo.eof()) {
+    foo.putback(c);
+
+    jpeg_in_memory.seekp(0);
+  
+    jpg_to_bytes.readHeader(width,height,depth);
+    size = width*height*depth;
+
+    delete [] img_buffer;
+
+    img_buffer = new unsigned char[size];
+    jpg_to_bytes.readImage(img_buffer);
+
+    _nrl = 0;
+    _nrh = height - 1;
+    _ncl = 0;
+    _nch = width - 1;
+
+    T **m;
+    m = buildMatrix();
+
+    if (depth == 3){
+      int line=0, col=0;
+
+      for (int i = 0; i < size; i+=3){
+        rgb8 buffer_rgb;
+
+        buffer_rgb.r = img_buffer[i];
+        buffer_rgb.g = img_buffer[i+1];
+        buffer_rgb.b = img_buffer[i+2];
+        m[line][col]=buffer_rgb;
+
+        col++;
+        if(col == width){
+          line++;
+          col = 0;
+        }
+      }
+
+    }
+
+    _matrix = m;
+  }
 }

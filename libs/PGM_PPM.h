@@ -2,10 +2,15 @@
 #define __PGM_PPM
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
 #include <ctype.h>
+
+#include "./jpegToPpm/jpeg-c++.h"
 
 #define NR_END 1
 
@@ -27,6 +32,7 @@ class PGM_PPM{
 		PGM_PPM(){};
 		PGM_PPM(long nrl, long nrh, long ncl, long nch){_nrl=nrl; _nrh=nrh; _ncl=ncl; _nch=nch;};
 		void loadImage(char* filename);
+		void loadJpeg(char* filename);
 		void saveImage(T** matrix, char* filename);
 		T** buildMatrix();
 		char* _readitem(ifstream& file, char* buffer);
