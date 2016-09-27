@@ -80,7 +80,7 @@ long* ImageProcessingTools::histogramme(byte** matrix, char* filename, long nrl,
 	return hist;
 }
 
-double purcentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch) {
+double percentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch) {
     double nb;
     int totalPixels = nrh * nch;    
     for (int i = 0; i < nrh; i++) {

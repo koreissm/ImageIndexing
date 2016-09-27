@@ -8,6 +8,7 @@ int main(void){
   PGM_PPM<byte> img_sobely;
   PGM_PPM<byte> norme;
 
+  ImageProcessingTools toolBox;
 
   int filtreMoyenneur[][3] =  {
 	{1, 1, 1},
@@ -27,8 +28,8 @@ int main(void){
   	{1, 2, 1}
   };
 
-  Mask sobelx(filtreSobelX);
-  Mask sobely(filtreSobelY);
+  ImageProcessingTools sobelx(filtreSobelX);
+  ImageProcessingTools sobely(filtreSobelY);
 
   img.loadImage("../images/1.pgm");
   img.saveImage(img.matrix(), "../outputs/1.pgm");
@@ -75,4 +76,6 @@ int main(void){
   int seuil = 20;
   norme = binariser(normeGradient(img_sobelx.matrix(), img_sobely.matrix(), img_sobelx.nrl(), img_sobelx.nrh(), img_sobelx.ncl(), img_sobelx.nch()).matrix(), img_sobelx.nrl(), img_sobelx.nrh(), img_sobelx.ncl(), img_sobelx.nch(), seuil);
   norme.saveImage(norme.matrix(), "../outputs/norme.pgm");
+  double n = percentageOfContoursInImage(norme.matrix(), norme.nrl(), norme.nrh(), norme.ncl(), norme.nch());
+  cout << "Number of contours in the image " << "../outputs/norme.pgm :=> " <<  n << endl;
 }
