@@ -2,6 +2,7 @@
 #define __DISTANCE
 
 #include <math.h>
+#include "PGM_PPM.h"
 
 class Distance {
 
@@ -10,9 +11,11 @@ class Distance {
 
     public:
         Distance(int length){_length = length;}
-        double euclidian (int* histo1, int *histo2);
-        double Bhattacharyyas(int* histo1, int *histo2); 
-        double BhattacharyyasCoef(int* histo1, int *histo2);
-        double Distance::sum(byte* hist);
+        double euclidian (long* histo1, long *histo2);
+        double Bhattacharyyas(long* histo1, long *histo2); 
+        double BhattacharyyasCoef(long* histo1, long *histo2);
+        double sum(long* hist);
 
-}
+};
+
+#endif

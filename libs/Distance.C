@@ -1,6 +1,6 @@
-#include<Distance.h>
+#include"Distance.h"
 
-double Division::euclidian (int* h1, int *h2) {
+double Distance::euclidian (long* h1, long *h2) {
     int distance = 0;
 
     for (int i = 0; i < _length; i++) {
@@ -11,12 +11,12 @@ double Division::euclidian (int* h1, int *h2) {
 }
 
 //Calculate Bhattacharyya's distance between two histogramss
-double Distance::Bhattacharyyas(int* h1, int *h2) {
-    return -log(Bhattacharyyas(h1, h2));
+double Distance::Bhattacharyyas(long* h1, long *h2) {
+    return -log(BhattacharyyasCoef(h1, h2));
 }
 
 //Bhattacharyya's coefficient
-double Distance::BhattacharyyasCoef(int* h1, int *h2) {
+double Distance::BhattacharyyasCoef(long* h1, long *h2) {
     double coef = 0;
     double sum1 = sum(h1), sum2 = sum(h2);
 
@@ -27,7 +27,7 @@ double Distance::BhattacharyyasCoef(int* h1, int *h2) {
     return coef;
 }
 
-double Distance::sum(byte* hist) {
+double Distance::sum(long* hist) {
    double s = 0; 
     for (int i = 0; i < _length; i++) {
         s += (double) hist[i];
