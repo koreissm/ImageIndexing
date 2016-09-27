@@ -51,19 +51,19 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
     return imageM;
 }
 
-long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch){
-	long* hist = new long[255];
-	ofstream file;
+long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
+	long* hist = new long[256];
+	//ofstream file;
 
 	char* buffer = new char[80];
 
-	sprintf(buffer, "hist_%s", filename);
+	//sprintf(buffer, "hist_%s", filename);
 
-	file.open(buffer);
-  	if (!file.is_open())
-    	cerr << "ouverture du fichier impossible" << endl;
+	//file.open(buffer);
+  	//if (!file.is_open())
+    //	cerr << "ouverture du fichier impossible" << endl;
 
-	for(int i=0; i<255; i++)
+	for(int i=0; i<256; i++)
 		hist[i]=0;
 
 	for(long i=nrl; i<nrh; i++){
@@ -72,12 +72,12 @@ long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, l
 		}
 	}
 
-	for(int i=0; i<255; i++){
-		sprintf(buffer,"%d %ld\n", i, hist[i]);
-		file.write(buffer, strlen(buffer));
-	}
+	//for(int i=0; i<255; i++){
+	//	sprintf(buffer,"%d %ld\n", i, hist[i]);
+	//	file.write(buffer, strlen(buffer));
+	//}
 
-	file.close();
+	//file.close();
 	return hist;
 }
 
@@ -125,3 +125,50 @@ long* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
 
 	return rate_colors;
 };
+
+void processImage(char* path, char* filename){
+	PGM_PPM<rgb8> image;
+	byte** mat;
+	long* hist;
+	long* rate_colors;
+	double percentageOfContours;
+
+	image.loadImage(path);
+	mat = image.rgb8tobmatrix(image.matrix());
+
+	ofstream outputFile;
+	char* outputFile_name = new char[80];
+	char* buffer = new char[80];
+
+	sprintf(outputFile_name, "%s.txt", filename);
+	
+	outputFile.open(outputFile_name);
+	if (!outputFile.is_open())
+    	cerr << "ouverture du fichier output impossible" << endl;
+
+	hist = histogramme(mat, image.nrl(), image.nrh(), image.ncl(), image.nch());
+	rate_colors = rateColors(image.matrix(), image.nrl(), image.nrh(), image.ncl(), image.nch());
+	percentageOfContours = percentageOfContoursInImage(mat, image.nrl(), image.nrh(), image.ncl(), image.nch());
+
+
+	sprintf(buffer,"%f", percentageOfContours);
+	outputFile.write(buffer, strlen(buffer));
+
+	sprintf(buffer,"\n%ld", rate_colors[0]);
+	outputFile.write(buffer, strlen(buffer));
+	for(int i=1; i<5; i++){
+		sprintf(buffer,";%ld", rate_colors[i]);
+		outputFile.write(buffer, strlen(buffer));
+	}
+
+	sprintf(buffer,"\n%ld", hist[0]);
+	outputFile.write(buffer, strlen(buffer));
+	for(int i=1; i<255; i++){
+		sprintf(buffer,";%ld", hist[i]);
+		outputFile.write(buffer, strlen(buffer));
+	}
+
+	outputFile.close();
+
+
+}

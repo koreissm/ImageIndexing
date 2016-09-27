@@ -12,8 +12,8 @@
 PGM_PPM<byte> apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch);
 PGM_PPM<byte> normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch);
 PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil);
-long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch);
 double percentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch); 
+long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch);
 long* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch);
-
+void processImage(char* path, char* filename);
 #endif
