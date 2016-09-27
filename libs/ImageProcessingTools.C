@@ -1,5 +1,5 @@
 
-PGM_PPM<byte> Mask::apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch){
+PGM_PPM<byte> ImageProcessingTools::apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch){
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	double tmp;
 	imageM.buildMatrix();
@@ -22,7 +22,7 @@ PGM_PPM<byte> Mask::apply_mask(byte** matrix, long nrl, long nrh, long ncl, long
 }
 
 
-PGM_PPM<byte> normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch) {
+PGM_PPM<byte> ImageProcessingTools::normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch) {
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	imageM.buildMatrix();
 
@@ -35,7 +35,7 @@ PGM_PPM<byte> normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, lo
     return imageM;
 }
 
-PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil) {
+PGM_PPM<byte> ImageProcessingTools::binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil) {
     PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	imageM.buildMatrix();
 
@@ -50,8 +50,8 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
     return imageM;
 }
 
-byte hist[255] Mask::histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch){
-	long hist[255];
+long* ImageProcessingTools::histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch){
+	long* hist = new long[255];
 	ofstream file;
 
 	char* buffer = new char[80];
@@ -71,7 +71,6 @@ byte hist[255] Mask::histogramme(byte** matrix, char* filename, long nrl, long n
 		}
 	}
 
-	file.write(buffer, strlen(buffer));
 	for(int i; i<255; i++){
 		sprintf(buffer,"%d %ld\n", i, hist[i]);
 		file.write(buffer, strlen(buffer));
