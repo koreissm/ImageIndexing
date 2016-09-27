@@ -1,4 +1,4 @@
-#include "Mask.h"
+#include "../libs/ImageProcessingTools.h"
 
 int main(void){
   PGM_PPM<byte> img;
@@ -6,8 +6,16 @@ int main(void){
 
   PGM_PPM<byte> img_sobelx;
   PGM_PPM<byte> img_sobely;
+  PGM_PPM<byte> norme;
 
-  int filtreSobelX[][3] =  {
+
+  int filtreMoyenneur[][3] =  {
+	{1, 1, 1},
+	{1, 1, 1},
+	{1, 1, 1}
+  };
+
+ int filtreSobelX[][3] =  {
 	{-1, 0, 1},
 	{-2, 0, 2},
 	{-1, 0, 1}
@@ -22,11 +30,11 @@ int main(void){
   Mask sobelx(filtreSobelX);
   Mask sobely(filtreSobelY);
 
-  img.loadImage("./images/image.pgm");
-  img.saveImage(img.matrix(), "./images/copie_image.pgm");
+  img.loadImage("../images/1.pgm");
+  img.saveImage(img.matrix(), "../outputs/1.pgm");
 
-  img1.loadImage("./images/nuit.ppm");
-  img1.saveImage(img1.matrix(), "./images/copie_nuit.ppm");
+  img1.loadImage("../images/1.ppm");
+  img1.saveImage(img1.matrix(), "../outputs/1.ppm");
 
   img_sobelx = sobelx.apply_mask(img.matrix(), 
   	img.nrl(),
@@ -42,9 +50,9 @@ int main(void){
   	img.nch()
   );
 
-  img_sobelx.saveImage(img_sobelx.matrix(), "./images/image_sobelx.pgm");
+  img_sobelx.saveImage(img_sobelx.matrix(), "../outputs/image_sobelx.pgm");
 
-  img_sobely.saveImage(img_sobely.matrix(), "./images/image_sobely.pgm");
+  img_sobely.saveImage(img_sobely.matrix(), "../outputs/image_sobely.pgm");
 
   img_sobelx = sobelx.apply_mask(img1.rgb8tobmatrix(img1.matrix()), 
   	img1.nrl(),
@@ -60,8 +68,11 @@ int main(void){
   	img1.nch()
   );
 
-  img_sobelx.saveImage(img_sobelx.matrix(), "./images/nuit_sobelx.pgm");
+  img_sobelx.saveImage(img_sobelx.matrix(), "../outputs/nuit_sobelx.pgm");
 
-  img_sobely.saveImage(img_sobely.matrix(), "./images/nuit_sobely.pgm");
+  img_sobely.saveImage(img_sobely.matrix(), "../outputs/nuit_sobely.pgm");
 
+  int seuil = 20;
+  norme = binariser(normeGradient(img_sobelx.matrix(), img_sobely.matrix(), img_sobelx.nrl(), img_sobelx.nrh(), img_sobelx.ncl(), img_sobelx.nch()).matrix(), img_sobelx.nrl(), img_sobelx.nrh(), img_sobelx.ncl(), img_sobelx.nch(), seuil);
+  norme.saveImage(norme.matrix(), "../outputs/norme.pgm");
 }

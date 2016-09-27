@@ -50,7 +50,7 @@ void PGM_PPM<T>::loadImage(char* filename){
  
   file.open(filename);
   if (!file.is_open())
-    cerr << "ouverture du fichier impossible" << endl;
+    cerr << "ouverture du fichier\"" << filename << "\" impossible" << endl;
 
 
   _readitem(file, buffer);

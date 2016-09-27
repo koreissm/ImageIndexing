@@ -12,7 +12,9 @@ protected:
 public:
 	Mask(int (* mask)[3]){_mask = mask;};
 	PGM_PPM<byte> apply_mask(byte** matrix, long nrl, long nrh, long ncl, long nch);
+	byte** normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch);
+    byte** binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil);
 };
 
-#include "Mask.C"
+#include "ImageProcessingTools.C"
 #endif
