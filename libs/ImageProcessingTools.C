@@ -62,7 +62,7 @@ long* ImageProcessingTools::histogramme(byte** matrix, char* filename, long nrl,
   	if (!file.is_open())
     	cerr << "ouverture du fichier impossible" << endl;
 
-	for(int i; i<255; i++)
+	for(int i=0; i<255; i++)
 		hist[i]=0;
 
 	for(long i=nrl; i<nrh; i++){
@@ -71,7 +71,7 @@ long* ImageProcessingTools::histogramme(byte** matrix, char* filename, long nrl,
 		}
 	}
 
-	for(int i; i<255; i++){
+	for(int i=0; i<255; i++){
 		sprintf(buffer,"%d %ld\n", i, hist[i]);
 		file.write(buffer, strlen(buffer));
 	}
