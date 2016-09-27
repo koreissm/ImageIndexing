@@ -92,3 +92,35 @@ double purcentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, 
 
     return nb / totalPixels;
 }
+
+long* ImageProcessingTools::rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
+	long nb_pixels = nrh*nch;
+
+	long* rate_colors = new long[5]; // red, green, blue, white, black
+
+	rate_colors[0]=0;rate_colors[1]=0;rate_colors[2]=0;rate_colors[3]=0;rate_colors[4]=0;
+
+	for(long i=nrl; i<nrh; i++){
+		for(long j=ncl; j<nch; j++){
+			if(matrix[i][j].r>SEUIL_MAX && (matrix[i][j].g+matrix[i][j].b) < SEUIL_OTHERS){
+				rate_colors[0]++;
+			} else if(matrix[i][j].g>SEUIL_MAX && (matrix[i][j].r+matrix[i][j].b) < SEUIL_OTHERS){
+				rate_colors[1]++;
+			} else if(matrix[i][j].b>SEUIL_MAX && (matrix[i][j].r+matrix[i][j].g) < SEUIL_OTHERS){
+				rate_colors[2]++;
+			} else if(matrix[i][j].r>SEUIL_W && matrix[i][j].g>SEUIL_W && matrix[i][j].b>SEUIL_W){
+				rate_colors[3]++;
+			} else if(matrix[i][j].r<SEUIL_B && matrix[i][j].g<SEUIL_B && matrix[i][j].b<SEUIL_B){
+				rate_colors[4]++;
+			}
+		}
+	}
+
+	for(int i=0; i<5; i++){
+		float f = ((float)rate_colors[i]/(float)nb_pixels)*100.0;
+		rate_colors[i] = (long)f;
+		//cout << rate_colors[i] << endl;
+	}
+
+	return rate_colors;
+};
