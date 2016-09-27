@@ -1,5 +1,5 @@
-#ifndef __MASK
-#define __MASK
+#ifndef __IMAGE_PROCESSING_TOOLS
+#define __IMAGE_PROCESSING_TOOLS
 
 #include "PGM_PPM.h"
 #include <math.h>
@@ -16,6 +16,7 @@ public:
 	PGM_PPM<byte> normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch);
     PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil);
 	long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch);
+    double purcentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch); 
 };
 
 #include "ImageProcessingTools.C"

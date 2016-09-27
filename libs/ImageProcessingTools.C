@@ -22,7 +22,7 @@ PGM_PPM<byte> ImageProcessingTools::apply_mask(byte** matrix, long nrl, long nrh
 }
 
 
-PGM_PPM<byte> ImageProcessingTools::normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch) {
+PGM_PPM<byte> normeGradient(byte** sobelX, byte** sobelY, long nrl, long nrh, long ncl, long nch) {
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	imageM.buildMatrix();
 
@@ -35,7 +35,7 @@ PGM_PPM<byte> ImageProcessingTools::normeGradient(byte** sobelX, byte** sobelY, 
     return imageM;
 }
 
-PGM_PPM<byte> ImageProcessingTools::binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil) {
+PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, int seuil) {
     PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	imageM.buildMatrix();
 
@@ -78,4 +78,17 @@ long* ImageProcessingTools::histogramme(byte** matrix, char* filename, long nrl,
 
 	file.close();
 	return hist;
+}
+
+double purcentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch) {
+    double nb;
+    int totalPixels = nrh * nch;    
+    for (int i = 0; i < nrh; i++) {
+        for (int j = 0; j < nch; j++) {
+            if (matrix[i][j] == 255)
+                nb++;
+        }
+    }
+
+    return nb / totalPixels;
 }
