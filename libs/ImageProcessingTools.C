@@ -59,12 +59,19 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
     return imageM;
 }
 
-long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
-	long* hist = new long[256];
+long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch){
+	long* hist = new long[255];
+	ofstream file;
 
 	char* buffer = new char[80];
 
-	for(int i=0; i<256; i++)
+	sprintf(buffer, "hist_%s", filename);
+
+	file.open(buffer);
+  	if (!file.is_open())
+    	cerr << "ouverture du fichier impossible" << endl;
+
+	for(int i=0; i<255; i++)
 		hist[i]=0;
 
 	for(long i=nrl; i<nrh; i++){
@@ -72,7 +79,13 @@ long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
 			hist[matrix[i][j]]++;
 		}
 	}
-	
+
+	for(int i=0; i<255; i++){
+		sprintf(buffer,"%d %ld\n", i, hist[i]);
+		file.write(buffer, strlen(buffer));
+	}
+
+	file.close();
 	return hist;
 }
 
@@ -93,8 +106,8 @@ float* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
 	long nb_pixels = nrh*nch;
 
 	float* rate_colors = new float[5]; // red, green, blue, white, black
-
-	rate_colors[0]=0;rate_colors[1]=0;rate_colors[2]=0;rate_colors[3]=0;rate_colors[4]=0;
+     
+    rate_colors[0]=0;rate_colors[1]=0;rate_colors[2]=0;rate_colors[3]=0;rate_colors[4]=0;
 
 	for(long i=nrl; i<nrh; i++){
 		for(long j=ncl; j<nch; j++){
@@ -117,9 +130,35 @@ float* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
 		rate_colors[i] = f;
 		//cout << rate_colors[i] << endl;
 	}
+    return rate_colors;
+}
 
-	return rate_colors;
-};
+double percentageOfContoursInImageTrue(byte** matrix, long nrl, long nrh, long ncl, long nch) {
+    PGM_PPM<byte> img_sobelx;
+    PGM_PPM<byte> img_sobely;
+    PGM_PPM<byte> norme;
+
+    int filtreSobelX[3][3] =  {
+	    {-1, 0, 1},
+	    {-2, 0, 2},
+	    {-1, 0, 1}
+    };
+
+    int filtreSobelY[3][3] =  {
+	    {-1, -2, -1},
+	    {0, 0, 0},
+  	    {1, 2, 1}
+    };
+
+    img_sobelx = apply_mask((int**)filtreSobelX, matrix, nrl, nrh, ncl, nch);
+    img_sobely = apply_mask((int**)filtreSobelY, matrix, nrl, nrh, ncl, nch);
+
+    norme = binariser(normeGradient(img_sobelx.matrix(), img_sobely.matrix(), nrl, nrh, ncl, nch).matrix(), nrl, nrh, ncl, nch, SEUIL_BINARISATION);
+
+    //norme.saveImage(norme.matrix(), "../outputs/norme.pgm");
+    
+    return percentageOfContoursInImage(norme.matrix(), nrl, nrh, ncl, nch);
+}
 
 void processImage(char* path, char* filename, char* outPath){
 	PGM_PPM<rgb8> image;
@@ -162,8 +201,6 @@ void processImage(char* path, char* filename, char* outPath){
 		sprintf(buffer,";%ld", hist[i]);
 		outputFile.write(buffer, strlen(buffer));
 	}
-
-	outputFile.close();
-
-
+    
+    outputFile.close();
 }
