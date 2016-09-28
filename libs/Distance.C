@@ -4,7 +4,7 @@ double Distance::euclidian (long* h1, long *h2) {
     int distance = 0;
 
     for (int i = 0; i < _length; i++) {
-        distance += (h1-h2) * (h1-h2);
+        distance += (h1[i]-h2[i]) * (h1[i]-h2[i]);
     }
 
     return sqrt(distance); 
