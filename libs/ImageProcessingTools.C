@@ -1,6 +1,6 @@
 #include "ImageProcessingTools.h"
 
-PGM_PPM<byte> apply_mask(int** mask, byte** matrix, long nrl, long nrh, long ncl, long nch){
+PGM_PPM<byte> apply_mask(int(* mask)[3], byte** matrix, long nrl, long nrh, long ncl, long nch){
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
 	double tmp;
 	imageM.buildMatrix();
@@ -11,17 +11,14 @@ PGM_PPM<byte> apply_mask(int** mask, byte** matrix, long nrl, long nrh, long ncl
 
 			tmp = 0;
 			
-			tmp = (matrix[i+1][j+1]*mask[-1+1][-1+1]) + (matrix[i+1][j]*mask[-1+1][1])
-				+ (matrix[i+1][j-1]*mask[-1+1][1+1]) + (matrix[i+1][j-2]*mask[-1+1][2+1])
+			tmp = (matrix[i+1][j+1]*mask[0][0]) + (matrix[i+1][j]*mask[0][1])
+				+ (matrix[i+1][j-1]*mask[0][2])
 
-				+ (matrix[i][j+1]*mask[-1+1][-1+1]) + (matrix[i][j]*mask[1][1])
-				+ (matrix[i][j-1]*mask[1][1+1]) + (matrix[i][j-2]*mask[1][2+1])
+				+ (matrix[i][j+1]*mask[1][0]) + (matrix[i][j]*mask[1][1])
+				+ (matrix[i][j-1]*mask[1][2])
 				
-				+ (matrix[i-1][j+1]*mask[1+1][-1+1]) + (matrix[i-1][j]*mask[1+1][1])
-				+ (matrix[i-1][j-1]*mask[1+1][1+1]) + (matrix[i-1][j-2]*mask[1+1][2+1])
-
-				+ (matrix[i-2][j+1]*mask[2+1][-1+1]) + (matrix[i-2][j]*mask[2+1][1])
-				+ (matrix[i-2][j-1]*mask[2+1][1+1]) + (matrix[i-2][j-2]*mask[2+1][2+1]);
+				+ (matrix[i-1][j+1]*mask[2][0]) + (matrix[i-1][j]*mask[2][1])
+				+ (matrix[i-1][j-1]*mask[2][2]);
 				
 			imageM.matrix()[i][j] = (fabs(tmp)/1020)*255;
 		}
@@ -59,17 +56,8 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
     return imageM;
 }
 
-long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, long nch){
+long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
 	long* hist = new long[255];
-	ofstream file;
-
-	char* buffer = new char[80];
-
-	sprintf(buffer, "hist_%s", filename);
-
-	file.open(buffer);
-  	if (!file.is_open())
-    	cerr << "ouverture du fichier impossible" << endl;
 
 	for(int i=0; i<255; i++)
 		hist[i]=0;
@@ -79,13 +67,7 @@ long* histogramme(byte** matrix, char* filename, long nrl, long nrh, long ncl, l
 			hist[matrix[i][j]]++;
 		}
 	}
-
-	for(int i=0; i<255; i++){
-		sprintf(buffer,"%d %ld\n", i, hist[i]);
-		file.write(buffer, strlen(buffer));
-	}
-
-	file.close();
+	
 	return hist;
 }
 
@@ -138,24 +120,24 @@ double percentageOfContoursInImageTrue(byte** matrix, long nrl, long nrh, long n
     PGM_PPM<byte> img_sobely;
     PGM_PPM<byte> norme;
 
-    int filtreSobelX[3][3] =  {
+    int filtreSobelX[][3] =  {
 	    {-1, 0, 1},
 	    {-2, 0, 2},
 	    {-1, 0, 1}
     };
 
-    int filtreSobelY[3][3] =  {
+    int filtreSobelY[][3] =  {
 	    {-1, -2, -1},
 	    {0, 0, 0},
   	    {1, 2, 1}
     };
 
-    img_sobelx = apply_mask((int**)filtreSobelX, matrix, nrl, nrh, ncl, nch);
-    img_sobely = apply_mask((int**)filtreSobelY, matrix, nrl, nrh, ncl, nch);
+    img_sobelx = apply_mask(filtreSobelX, matrix, nrl, nrh, ncl, nch);
+    img_sobely = apply_mask(filtreSobelY, matrix, nrl, nrh, ncl, nch);
 
     norme = binariser(normeGradient(img_sobelx.matrix(), img_sobely.matrix(), nrl, nrh, ncl, nch).matrix(), nrl, nrh, ncl, nch, SEUIL_BINARISATION);
 
-    //norme.saveImage(norme.matrix(), "../outputs/norme.pgm");
+    norme.saveImage(norme.matrix(), "norme.pgm");
     
     return percentageOfContoursInImage(norme.matrix(), nrl, nrh, ncl, nch);
 }
@@ -182,7 +164,7 @@ void processImage(char* path, char* filename, char* outPath){
 
 	hist = histogramme(mat, image.nrl(), image.nrh(), image.ncl(), image.nch());
 	rate_colors = rateColors(image.matrix(), image.nrl(), image.nrh(), image.ncl(), image.nch());
-	percentageOfContours = percentageOfContoursInImage(mat, image.nrl(), image.nrh(), image.ncl(), image.nch());
+	percentageOfContours = percentageOfContoursInImageTrue(mat, image.nrl(), image.nrh(), image.ncl(), image.nch());
 
 
 	sprintf(buffer,"%f", percentageOfContours);

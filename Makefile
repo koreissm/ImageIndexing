@@ -1,5 +1,5 @@
 imageIndexing: main.o ImageProcessingTools.o
-	g++ main.o ImageProcessingTools.o -o imageIndexing -ljpeg
+	g++ -g main.o ImageProcessingTools.o -o imageIndexing -ljpeg
 
 
 main.o: ./src/main.C
