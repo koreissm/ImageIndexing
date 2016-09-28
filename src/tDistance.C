@@ -12,8 +12,8 @@ int main () {
 
 	image1.loadJpeg("../imagesJPG/vache1.jpg");
 	image2.loadJpeg("../imagesJPG/vache3.jpg");
-	image3.loadJpeg("../imagesJPG/mer1.jpg");
-	image4.loadJpeg("../imagesJPG/arbre2.jpg");
+	image3.loadJpeg("../imagesJPG/bus1.jpg");
+	image4.loadJpeg("../imagesJPG/bus2.jpg");
 
 	matrix1 = image1.rgb8tobmatrix(image1.matrix());
 	matrix2 = image2.rgb8tobmatrix(image2.matrix());
@@ -25,15 +25,24 @@ int main () {
 	long* histogram3 = histogramme(matrix3, image3.nrl(), image3.nrh(), image3.ncl(), image3.nch());
 	long* histogram4 = histogramme(matrix4, image4.nrl(), image4.nrh(), image4.ncl(), image4.nch());
 
-    double bhatacharyyas = distances.Bhattacharyyas(histogram1, histogram2);
-    double euclidian = distances.euclidian(histogram1, histogram2);
+    float bhatacharyyas = distances.Bhattacharyyas(histogram3, histogram4);
+    float euclidian = distances.euclidian(histogram3, histogram4);
+    
+    //cout << "Euclidian : " << endl;
+    //cout << "distance : " << euclidian << endl << endl;
 
-    cout << "Euclidian : " << endl;
-    cout << "distance : " << euclidian << endl << endl;
+    //cout << "Bhattacharyyas : " << endl;
+    //cout << "distance : " << bhatacharyyas << endl;
 
-    cout << "Bhattacharyyas : " << endl;
-    cout << "distance : " << bhatacharyyas << endl;
+    float percentage1 = percentageOfContoursInImageTrue(matrix1, image1.nrl(), image1.nrh(), image1.ncl(), image1.nch());
+    float percentage2 = percentageOfContoursInImageTrue(matrix2, image2.nrl(), image2.nrh(), image2.ncl(), image2.nch());
+    float percentage3 = percentageOfContoursInImageTrue(matrix3, image3.nrl(), image3.nrh(), image3.ncl(), image3.nch());
+    float percentage4 = percentageOfContoursInImageTrue(matrix4, image4.nrl(), image4.nrh(), image4.ncl(), image4.nch());
 
+    cout << "Image 1 : " << percentage1 << endl;
+    cout << "Image 2 : " << percentage2 << endl;
+    cout << "Image 3 : " << percentage3 << endl;
+    cout << "Image 4 : " << percentage4 << endl;
 
     return 0;
 }

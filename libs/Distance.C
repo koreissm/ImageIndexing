@@ -1,24 +1,24 @@
 #include"Distance.h"
 
-double Distance::euclidian (long* h1, long *h2) {
-    int distance = 0;
+float Distance::euclidian (long* h1, long *h2) {
+    long long distance = 0;
 
     for (int i = 0; i < _length; i++) {
-        distance += (h1[i]-h2[i]) * (h1[i]-h2[i]);
+        distance += pow((h1[i]-h2[i]), 2);
     }
 
     return sqrt(distance); 
 }
 
 //Calculate Bhattacharyya's distance between two histogramss
-double Distance::Bhattacharyyas(long* h1, long *h2) {
+float Distance::Bhattacharyyas(long* h1, long *h2) {
     return -log(BhattacharyyasCoef(h1, h2));
 }
 
 //Bhattacharyya's coefficient
-double Distance::BhattacharyyasCoef(long* h1, long *h2) {
-    double coef = 0;
-    double sum1 = sum(h1), sum2 = sum(h2);
+float Distance::BhattacharyyasCoef(long* h1, long *h2) {
+    float coef = 0;
+    float sum1 = sum(h1), sum2 = sum(h2);
 
     for (int i = 0; i < _length; i++) {
         coef += sqrt((h1[i] * h2[i]) / (sum1 * sum2));
@@ -27,10 +27,10 @@ double Distance::BhattacharyyasCoef(long* h1, long *h2) {
     return coef;
 }
 
-double Distance::sum(long* hist) {
-   double s = 0; 
+float Distance::sum(long* hist) {
+   float s = 0; 
     for (int i = 0; i < _length; i++) {
-        s += (double) hist[i];
+        s += (float) hist[i];
     }
     return s;
 }

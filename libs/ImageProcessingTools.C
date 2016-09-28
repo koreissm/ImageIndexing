@@ -2,7 +2,7 @@
 
 PGM_PPM<byte> apply_mask(int(* mask)[3], byte** matrix, long nrl, long nrh, long ncl, long nch){
 	PGM_PPM<byte> imageM(nrl, nrh, ncl, nch); //image après le masque
-	double tmp;
+	float tmp;
 	imageM.buildMatrix();
 
 
@@ -57,9 +57,9 @@ PGM_PPM<byte> binariser(byte** matrix, long nrl, long nrh, long ncl, long nch, i
 }
 
 long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
-	long* hist = new long[255];
+	long* hist = new long[256];
 
-	for(int i=0; i<255; i++)
+	for(int i=0; i<256; i++)
 		hist[i]=0;
 
 	for(long i=nrl; i<nrh; i++){
@@ -71,8 +71,8 @@ long* histogramme(byte** matrix, long nrl, long nrh, long ncl, long nch){
 	return hist;
 }
 
-double percentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch) {
-    double nb;
+float percentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, long nch) {
+    float nb;
     int totalPixels = nrh * nch;    
     for (int i = 0; i < nrh; i++) {
         for (int j = 0; j < nch; j++) {
@@ -115,7 +115,7 @@ float* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
     return rate_colors;
 }
 
-double percentageOfContoursInImageTrue(byte** matrix, long nrl, long nrh, long ncl, long nch) {
+float percentageOfContoursInImageTrue(byte** matrix, long nrl, long nrh, long ncl, long nch) {
     PGM_PPM<byte> img_sobelx;
     PGM_PPM<byte> img_sobely;
     PGM_PPM<byte> norme;
@@ -137,7 +137,7 @@ double percentageOfContoursInImageTrue(byte** matrix, long nrl, long nrh, long n
 
     norme = binariser(normeGradient(img_sobelx.matrix(), img_sobely.matrix(), nrl, nrh, ncl, nch).matrix(), nrl, nrh, ncl, nch, SEUIL_BINARISATION);
 
-    norme.saveImage(norme.matrix(), "norme.pgm");
+    norme.saveImage(norme.matrix(), "../outputs/norme.pgm");
     
     return percentageOfContoursInImage(norme.matrix(), nrl, nrh, ncl, nch);
 }
@@ -147,7 +147,7 @@ void processImage(char* path, char* filename, char* outPath){
 	byte** mat;
 	long* hist;
 	float* rate_colors;
-	double percentageOfContours;
+	float percentageOfContours;
 
 	image.loadJpeg(path);
 	mat = image.rgb8tobmatrix(image.matrix());

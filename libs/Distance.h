@@ -11,10 +11,10 @@ class Distance {
 
     public:
         Distance(int length){_length = length;}
-        double euclidian (long* histo1, long *histo2);
-        double Bhattacharyyas(long* histo1, long *histo2); 
-        double BhattacharyyasCoef(long* histo1, long *histo2);
-        double sum(long* hist);
+        float euclidian (long* histo1, long *histo2);
+        float Bhattacharyyas(long* histo1, long *histo2); 
+        float BhattacharyyasCoef(long* histo1, long *histo2);
+        float sum(long* hist);
 
 };
 
