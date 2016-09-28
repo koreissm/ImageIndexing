@@ -11,10 +11,18 @@ PGM_PPM<byte> apply_mask(int** mask, byte** matrix, long nrl, long nrh, long ncl
 
 			tmp = 0;
 			
-			for(int u = -1; u < 2 ; u++)
-				for(int v = -1; v < 2 ; v++){
-					tmp += matrix[i-u][j-v]*mask[u+1][v+1];
-				}
+			tmp = (matrix[i+1][j+1]*mask[-1+1][-1+1]) + (matrix[i+1][j]*mask[-1+1][1])
+				+ (matrix[i+1][j-1]*mask[-1+1][1+1]) + (matrix[i+1][j-2]*mask[-1+1][2+1])
+
+				+ (matrix[i][j+1]*mask[-1+1][-1+1]) + (matrix[i][j]*mask[1][1])
+				+ (matrix[i][j-1]*mask[1][1+1]) + (matrix[i][j-2]*mask[1][2+1])
+				
+				+ (matrix[i-1][j+1]*mask[1+1][-1+1]) + (matrix[i-1][j]*mask[1+1][1])
+				+ (matrix[i-1][j-1]*mask[1+1][1+1]) + (matrix[i-1][j-2]*mask[1+1][2+1])
+
+				+ (matrix[i-2][j+1]*mask[2+1][-1+1]) + (matrix[i-2][j]*mask[2+1][1])
+				+ (matrix[i-2][j-1]*mask[2+1][1+1]) + (matrix[i-2][j-2]*mask[2+1][2+1]);
+				
 			imageM.matrix()[i][j] = (fabs(tmp)/1020)*255;
 		}
     }
@@ -81,10 +89,10 @@ double percentageOfContoursInImage(byte** matrix, long nrl, long nrh, long ncl, 
     return nb / totalPixels;
 }
 
-long* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
+float* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
 	long nb_pixels = nrh*nch;
 
-	long* rate_colors = new long[5]; // red, green, blue, white, black
+	float* rate_colors = new float[5]; // red, green, blue, white, black
 
 	rate_colors[0]=0;rate_colors[1]=0;rate_colors[2]=0;rate_colors[3]=0;rate_colors[4]=0;
 
@@ -106,28 +114,28 @@ long* rateColors(rgb8** matrix, long nrl, long nrh, long ncl, long nch){
 
 	for(int i=0; i<5; i++){
 		float f = ((float)rate_colors[i]/(float)nb_pixels)*100.0;
-		rate_colors[i] = (long)f;
+		rate_colors[i] = f;
 		//cout << rate_colors[i] << endl;
 	}
 
 	return rate_colors;
 };
 
-void processImage(char* path, char* filename){
+void processImage(char* path, char* filename, char* outPath){
 	PGM_PPM<rgb8> image;
 	byte** mat;
 	long* hist;
-	long* rate_colors;
+	float* rate_colors;
 	double percentageOfContours;
 
-	image.loadImage(path);
+	image.loadJpeg(path);
 	mat = image.rgb8tobmatrix(image.matrix());
 
 	ofstream outputFile;
 	char* outputFile_name = new char[80];
 	char* buffer = new char[80];
 
-	sprintf(outputFile_name, "%s.txt", filename);
+	sprintf(outputFile_name, "%s%s.txt",outPath, filename);
 	
 	outputFile.open(outputFile_name);
 	if (!outputFile.is_open())
@@ -141,10 +149,10 @@ void processImage(char* path, char* filename){
 	sprintf(buffer,"%f", percentageOfContours);
 	outputFile.write(buffer, strlen(buffer));
 
-	sprintf(buffer,"\n%ld", rate_colors[0]);
+	sprintf(buffer,"\n%f", rate_colors[0]);
 	outputFile.write(buffer, strlen(buffer));
 	for(int i=1; i<5; i++){
-		sprintf(buffer,";%ld", rate_colors[i]);
+		sprintf(buffer,";%f", rate_colors[i]);
 		outputFile.write(buffer, strlen(buffer));
 	}
 
