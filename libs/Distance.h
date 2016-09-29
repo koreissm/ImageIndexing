@@ -15,7 +15,7 @@ class Distance {
         float Bhattacharyyas(long* histo1, long *histo2); 
         float BhattacharyyasCoef(long* histo1, long *histo2);
         float sum(long* hist);
-
+        char** getSimilarImages (char* baseImageName);
 };
 
 #endif
